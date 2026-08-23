@@ -1,0 +1,132 @@
+name: adaptive-neural-platform
+
+services:
+  orchestrator:
+    build:
+      context: ./services/orchestrator
+    image: lpnu-orchestrator:dev
+    environment:
+      MODEL_CONTAINERS: "${MODEL_CONTAINERS:-yolo=http://yolo-model:8001,ssd=http://ssd-model:8002}"
+      DEFAULT_MODEL_ID: "${DEFAULT_MODEL_ID:-yolo}"
+      MODEL_REQUEST_TIMEOUT_SECONDS: "${MODEL_REQUEST_TIMEOUT_SECONDS:-30}"
+      TARGET_FPS: "${TARGET_FPS:-1}"
+      MAX_LATENCY_MS: "${MAX_LATENCY_MS:-1000}"
+      FRAME_QUEUE_CAPACITY: "${FRAME_QUEUE_CAPACITY:-8}"
+      FRAME_SAMPLE_EVERY_N: "${FRAME_SAMPLE_EVERY_N:-1}"
+      TEMPORAL_ENABLED: "${TEMPORAL_ENABLED:-false}"
+      TEMPORAL_DETECTOR_EVERY_N: "${TEMPORAL_DETECTOR_EVERY_N:-5}"
+      TEMPORAL_CONTEXT_MAX_AGE_MS: "${TEMPORAL_CONTEXT_MAX_AGE_MS:-2000}"
+      TEMPORAL_ESTIMATOR: "${TEMPORAL_ESTIMATOR:-hold-last}"
+    ports:
+      - "${ORCHESTRATOR_PORT:-8000}:8000"
+    depends_on:
+      yolo-model:
+        condition: service_healthy
+      ssd-model:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - >-
+          import urllib.request;
+          urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4).read()
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 6
+
+  yolo-model:
+    build:
+      context: ./services/yolo-model
+    image: lpnu-yolo-model:dev
+    environment:
+      YOLO_MODEL_NAME: "${YOLO_MODEL_NAME:-yolo11n}"
+      YOLO_MODEL_VERSION: "${YOLO_MODEL_VERSION:-yolo11n}"
+      YOLO_MODEL_WEIGHTS: "${YOLO_MODEL_WEIGHTS:-/models/yolo11n.pt}"
+      YOLO_DEVICE: cpu
+    ports:
+      - "${YOLO_MODEL_PORT:-8001}:8001"
+    volumes:
+      - yolo-model-weights:/models
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - >-
+          import urllib.request;
+          urllib.request.urlopen('http://127.0.0.1:8001/health', timeout=4).read()
+      interval: 10s
+      timeout: 5s
+      start_period: 120s
+      retries: 6
+
+  yolo-model-cuda:
+    profiles: [cuda]
+    build:
+      context: ./services/yolo-model
+      args:
+        TORCH_INDEX_URL: https://download.pytorch.org/whl/cu130
+    image: lpnu-yolo-model:cuda
+    environment:
+      YOLO_MODEL_NAME: "${YOLO_MODEL_NAME:-yolo11n}"
+      YOLO_MODEL_VERSION: "${YOLO_MODEL_VERSION:-yolo11n}"
+      YOLO_MODEL_WEIGHTS: "${YOLO_MODEL_WEIGHTS:-/models/yolo11n.pt}"
+      YOLO_DEVICE: cuda
+    ports:
+      - "${YOLO_CUDA_MODEL_PORT:-8003}:8001"
+    volumes:
+      - yolo-model-weights:/models
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - >-
+          import urllib.request;
+          urllib.request.urlopen('http://127.0.0.1:8001/health', timeout=4).read()
+      interval: 10s
+      timeout: 5s
+      start_period: 120s
+      retries: 6
+
+  ssd-model:
+    build:
+      context: ./services/ssd-model
+    image: lpnu-ssd-model:dev
+    environment:
+      SSD_MODEL_NAME: "${SSD_MODEL_NAME:-ssdlite320-mobilenet-v3-large}"
+      SSD_MODEL_VERSION: "${SSD_MODEL_VERSION:-torchvision-coco-v1}"
+      SSD_SCORE_THRESHOLD: "${SSD_SCORE_THRESHOLD:-0.5}"
+      TORCH_HOME: /models
+    ports:
+      - "${SSD_MODEL_PORT:-8002}:8002"
+    volumes:
+      - ssd-model-weights:/models
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - >-
+          import urllib.request;
+          urllib.request.urlopen('http://127.0.0.1:8002/health', timeout=4).read()
+      interval: 10s
+      timeout: 5s
+      start_period: 120s
+      retries: 6
+
+volumes:
+  yolo-model-weights:
+    name: "${YOLO_WEIGHTS_VOLUME:-adaptive-neural-platform-yolo-weights}"
+  ssd-model-weights:
+    name: "${SSD_WEIGHTS_VOLUME:-adaptive-neural-platform-ssd-weights}"
