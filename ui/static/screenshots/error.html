@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deployment error</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main>
+    <div class="page-heading"><h1>Adaptive Executor Setup</h1><span class="connection" data-online="true">Docker connected</span></div>
+    <div class="workspace">
+      <section class="configuration">
+        <div class="section-heading"><h2>Configuration</h2></div>
+        <div class="field"><label>Intermediate estimator</label><p class="field-intro">What happens between detector frames.</p><select><option>Kalman / SORT</option></select></div>
+        <div class="field"><label>Main component</label><p class="field-intro">The model that produces your detections.</p><select><option>YOLO11n</option></select></div>
+        <div class="policy-fields"><div class="field"><label>Execution policy</label><select><option>Adaptive cadence</option></select></div><div class="field"><label>Max interval (frames)</label><input value="5"></div></div>
+        <div class="form-footer"><button id="apply">Apply configuration<span>↗</span></button><p>The first build may take a few minutes.</p></div>
+      </section>
+      <section class="deployment">
+        <div class="section-heading"><h2>Deployment</h2></div>
+        <div class="status-block" data-phase="failed"><span class="status-mark"></span><div><h3>Startup needs attention.</h3><p>Review the details below, then apply the configuration to try again.</p></div></div>
+        <ol class="steps"><li><span>1</span>Build images<i></i></li><li><span>2</span>Start containers<i></i></li><li><span>3</span>API ready<i></i></li></ol>
+        <div class="error">target yolo-model: failed to solve: failed to read dockerfile: open Dockerfile: no such file or directory</div>
+        <details class="logs" open><summary>Deployment logs<span>20 lines</span></summary><pre>Image submission-ui-runtime-yolo-model Building
+Image submission-ui-runtime-orchestrator Building
+#1 [internal] load local bake definitions
+#1 DONE 0.0s
+
+#3 [yolo-model internal] load build definition from Dockerfile
+#3 transferring dockerfile: 2B done
+
+target yolo-model: failed to solve: failed to read dockerfile: open Dockerfile: no such file or directory</pre></details>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

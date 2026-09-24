@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deployment in progress</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main>
+    <div class="page-heading"><h1>Adaptive Executor Setup</h1><span class="connection" data-online="true">Docker connected</span></div>
+    <div class="workspace">
+      <section class="configuration">
+        <div class="section-heading"><h2>Configuration</h2></div>
+        <div class="field"><label>Intermediate estimator</label><p class="field-intro">What happens between detector frames.</p><select disabled><option>Kalman / SORT</option></select></div>
+        <div class="field"><label>Main component</label><p class="field-intro">The model that produces your detections.</p><select disabled><option>YOLO11n</option></select></div>
+        <div class="policy-fields"><div class="field"><label>Execution policy</label><select disabled><option>Adaptive cadence</option></select></div><div class="field"><label>Max interval (frames)</label><input value="5" disabled></div></div>
+        <div class="form-footer"><button id="apply" disabled>Applying configuration…<span>↗</span></button><p>The first build may take a few minutes.</p></div>
+      </section>
+      <section class="deployment">
+        <div class="section-heading"><h2>Deployment</h2></div>
+        <div class="status-block" data-phase="building"><span class="status-mark"></span><div><h3>Building the images.</h3><p>The first build takes longer. You can follow the output below.</p></div></div>
+        <ol class="steps"><li class="active"><span>1</span>Build images<i>In progress</i></li><li><span>2</span>Start containers<i></i></li><li><span>3</span>API ready<i></i></li></ol>
+        <details class="logs" open><summary>Deployment logs<span>108 lines</span></summary><pre>Building the selected model and API images.
+Image submission-ui-runtime-yolo-model Building
+Image submission-ui-runtime-orchestrator Building
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.08kB done
+#1 DONE 0.0s
+
+#21 [yolo-model] exporting to image
+#21 unpacking to docker.io/library/submission-ui-runtime-yolo-model:latest</pre></details>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

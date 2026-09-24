@@ -38,6 +38,12 @@ services:
       retries: 6
 
   yolo-model:
+    labels:
+      org.lpnu.component.role: anchor
+      org.lpnu.component.id: yolo
+      org.lpnu.component.name: YOLO11n
+      org.lpnu.component.description: General-purpose object detection · CPU
+      org.lpnu.component.port: "8001"
     build:
       context: ./services/yolo-model
     image: lpnu-yolo-model:dev
@@ -100,6 +106,12 @@ services:
       retries: 6
 
   ssd-model:
+    labels:
+      org.lpnu.component.role: anchor
+      org.lpnu.component.id: ssd
+      org.lpnu.component.name: SSDLite
+      org.lpnu.component.description: MobileNet V3 object detection · CPU
+      org.lpnu.component.port: "8002"
     build:
       context: ./services/ssd-model
     image: lpnu-ssd-model:dev

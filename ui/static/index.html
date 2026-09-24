@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Adaptive Executor Setup</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <main>
+    <div class="page-heading">
+      <h1>Adaptive Executor Setup</h1>
+      <span class="connection" id="connection">Connecting…</span>
+    </div>
+    <div class="workspace">
+      <section class="configuration" aria-labelledby="configuration-title">
+        <div class="section-heading"><h2 id="configuration-title">Configuration</h2></div>
+        <form id="configuration">
+          <fieldset id="fields" disabled>
+            <div class="field">
+              <label for="estimator">Intermediate estimator</label>
+              <p class="field-intro">What happens between detector frames.</p>
+              <select id="estimator" name="estimator"></select>
+            </div>
+            <div class="field">
+              <label for="component">Main component</label>
+              <p class="field-intro">The model that produces your detections.</p>
+              <select id="component" name="component"></select>
+            </div>
+            <div class="policy-fields">
+              <div class="field">
+                <label for="policy">Execution policy</label>
+                <select id="policy" name="policy">
+                  <option value="fixed">Fixed cadence</option>
+                  <option value="adaptive">Adaptive cadence</option>
+                </select>
+              </div>
+              <div class="field interval-field">
+                <label for="every-n" id="interval-label">Detector interval (frames)</label>
+                <input id="every-n" name="every_n" type="number" min="1" max="1000" step="1" value="3" required>
+              </div>
+            </div>
+          </fieldset>
+          <div class="form-footer">
+            <button type="submit" id="apply" disabled>Apply configuration<span aria-hidden="true">↗</span></button>
+            <p id="apply-note">The first build may take a few minutes.</p>
+          </div>
+        </form>
+      </section>
+      <section class="deployment" aria-labelledby="deployment-title">
+        <div class="section-heading"><h2 id="deployment-title">Deployment</h2></div>
+        <div class="status-block" id="status-block" data-phase="idle" aria-live="polite">
+          <span class="status-mark" aria-hidden="true"></span>
+          <div><h3 id="status-title">Ready when you are.</h3><p id="status-description">Apply a configuration to start the model and API.</p></div>
+        </div>
+        <ol class="steps" aria-label="Deployment progress">
+          <li data-step="building"><span>1</span>Build images<i></i></li>
+          <li data-step="starting"><span>2</span>Start containers<i></i></li>
+          <li data-step="ready"><span>3</span>API ready<i></i></li>
+        </ol>
+        <div class="endpoint" id="endpoint" hidden>
+          <div class="endpoint-heading"><span>API endpoint</span><span id="port"></span></div>
+          <code id="endpoint-url"></code>
+          <div class="endpoint-actions"><button type="button" class="text-button" id="copy">Copy address</button><a id="api-docs" target="_blank" rel="noopener">Open API docs ↗</a></div>
+          <p>POST /predict · POST /frames</p>
+        </div>
+        <div class="error" id="error" role="alert" hidden></div>
+        <details class="logs" id="logs-panel">
+          <summary>Deployment logs<span id="log-count">No output yet</span></summary>
+          <pre id="logs" tabindex="0" aria-label="Deployment logs">Logs will appear here when you apply a configuration.</pre>
+        </details>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

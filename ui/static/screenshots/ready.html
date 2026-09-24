@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Successful deployment</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main>
+    <div class="page-heading"><h1>Adaptive Executor Setup</h1><span class="connection" data-online="true">Docker connected</span></div>
+    <div class="workspace">
+      <section class="configuration">
+        <div class="section-heading"><h2>Configuration</h2></div>
+        <div class="field"><label>Intermediate estimator</label><p class="field-intro">What happens between detector frames.</p><select><option>Kalman / SORT</option></select></div>
+        <div class="field"><label>Main component</label><p class="field-intro">The model that produces your detections.</p><select><option>YOLO11n</option></select></div>
+        <div class="policy-fields"><div class="field"><label>Execution policy</label><select><option>Adaptive cadence</option></select></div><div class="field"><label>Max interval (frames)</label><input value="5"></div></div>
+        <div class="form-footer"><button id="apply">Apply configuration<span>↗</span></button><p>The first build may take a few minutes.</p></div>
+      </section>
+      <section class="deployment">
+        <div class="section-heading"><h2>Deployment</h2></div>
+        <div class="status-block" data-phase="ready"><span class="status-mark"></span><div><h3>Your API is ready.</h3><p>The model and API are running. You can start sending requests.</p></div></div>
+        <ol class="steps"><li class="done"><span>1</span>Build images<i>2,474 ms ✓</i></li><li class="done"><span>2</span>Start containers<i>7,219 ms ✓</i></li><li class="done"><span>3</span>API ready<i>6,027 ms ✓</i></li></ol>
+        <div class="endpoint"><div class="endpoint-heading"><span>API endpoint</span><span>Port 8000</span></div><code>http://localhost:8000</code><div class="endpoint-actions"><button class="text-button">Copy address</button><a>Open API docs ↗</a></div><p>POST /predict · POST /frames</p></div>
+        <details class="logs" open><summary>Deployment logs<span>113 lines</span></summary><pre>Container submission-ui-runtime-yolo-model-1 Healthy
+Container submission-ui-runtime-orchestrator-1 Started
+Checking model and API readiness.
+The model and API are healthy. Ready to receive requests.</pre></details>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

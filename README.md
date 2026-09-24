@@ -1,5 +1,15 @@
 # Master's Diploma 2026
 
+## UI
+
+```text
+docker compose -f ui/compose.yaml up --build -d
+```
+
+Open http://localhost:8080.
+
+## Command-line deployment
+
 1. Choose a model:
 
 ```text
